@@ -6,6 +6,7 @@ import Config from "./constants";
 import Amplify, { PubSub } from "aws-amplify";
 import { AWSIoTProvider } from "@aws-amplify/pubsub";
 import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
+import * as internalIp from "internal-ip";
 
 function App() {
   const [lightState, setLightState] = useState(false);
@@ -26,24 +27,46 @@ function App() {
       error: (error) => console.error(error),
       close: () => console.log("Done"),
     });
+    PubSub.subscribe("changeLightsReply").subscribe({
+      next: (data) => console.log("Message received", data),
+      error: (error) => console.error(error),
+      close: () => console.log("Done"),
+    });
   }, []);
 
   const sendHelloWorld = async () => {
-    await PubSub.publish("helloWorld", { msg: "Hello to all subscribers!" });
+    await PubSub.publish("changeLights", { msg: "Hello to all subscribers!" });
   };
 
-  const changeLightState = () => {
+  const changeLightState = async () => {
     setLightState(!lightState);
-    Axios.put(`${Config.base_url}hue/light`, [
-      {
-        id: 1,
-        state: { on: lightState },
-      },
-      {
-        id: 2,
-        state: { on: lightState },
-      },
-    ]);
+    if ((await internalIp.v4()) !== "192.168.10.95") {
+      console.log("Remote");
+      //Remote
+      await PubSub.publish("changeLights", [
+        {
+          id: 1,
+          state: { on: lightState },
+        },
+        {
+          id: 2,
+          state: { on: lightState },
+        },
+      ]);
+    } else {
+      console.log("Local");
+      //Localhost
+      Axios.put(`${Config.base_url}hue/light`, [
+        {
+          id: 1,
+          state: { on: lightState },
+        },
+        {
+          id: 2,
+          state: { on: lightState },
+        },
+      ]);
+    }
   };
 
   const updateLightBrightness = () => {
