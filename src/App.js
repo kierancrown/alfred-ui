@@ -17,10 +17,20 @@ function App() {
       new AWSIoTProvider({
         aws_pubsub_region: "eu-west-1",
         aws_pubsub_endpoint:
-          "wss://xxxxxxxxxxxxx.iot.<YOUR-IOT-REGION>.amazonaws.com/mqtt",
+          "wss://a2n6zesp9ud7lr-ats.iot.eu-west-1.amazonaws.com/mqtt",
       })
     );
+
+    PubSub.subscribe("helloWorldReply").subscribe({
+      next: (data) => console.log("Message received", data),
+      error: (error) => console.error(error),
+      close: () => console.log("Done"),
+    });
   }, []);
+
+  const sendHelloWorld = async () => {
+    await PubSub.publish("helloWorld", { msg: "Hello to all subscribers!" });
+  };
 
   const changeLightState = () => {
     setLightState(!lightState);
@@ -71,6 +81,7 @@ function App() {
       <button onClick={changeLightState}>
         Turn {!lightState ? "Off" : "On"} All Bedroom Lights
       </button>
+      <button onClick={sendHelloWorld}>IOT TEST</button>
       <input
         type="range"
         min={0}
