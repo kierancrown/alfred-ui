@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import "./App.css";
 import Config from "./constants";
 
+import Amplify, { PubSub } from "aws-amplify";
+import { AWSIoTProvider } from "@aws-amplify/pubsub";
+import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
+
 function App() {
   const [lightState, setLightState] = useState(false);
   const [lightBri, setLightBri] = useState(254);
+
+  useEffect(() => {
+    // Apply plugin with configuration
+    Amplify.addPluggable(
+      new AWSIoTProvider({
+        aws_pubsub_region: "eu-west-1",
+        aws_pubsub_endpoint:
+          "wss://xxxxxxxxxxxxx.iot.<YOUR-IOT-REGION>.amazonaws.com/mqtt",
+      })
+    );
+  }, []);
 
   const changeLightState = () => {
     setLightState(!lightState);
@@ -50,6 +65,7 @@ function App() {
 
   return (
     <div className="App">
+      <AmplifySignOut />
       <h1>Alfred Test</h1>
       <p>This will control the bedroom lights</p>
       <button onClick={changeLightState}>
@@ -70,4 +86,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);
