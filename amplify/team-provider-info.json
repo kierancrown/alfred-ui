@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-alfredui-dev-212010-authRole",
+      "UnauthRoleArn": "arn:aws:iam::073148422171:role/amplify-alfredui-dev-212010-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::073148422171:role/amplify-alfredui-dev-212010-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-alfredui-dev-212010-deployment",
+      "UnauthRoleName": "amplify-alfredui-dev-212010-unauthRole",
+      "StackName": "amplify-alfredui-dev-212010",
+      "StackId": "arn:aws:cloudformation:eu-west-1:073148422171:stack/amplify-alfredui-dev-212010/2e2f85a0-302d-11eb-bae4-0af573e17780",
+      "AmplifyAppId": "d11g37xu59bgb3"
+    }
+  }
+}
