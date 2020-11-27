@@ -40,6 +40,7 @@ function App() {
 
   const changeLightState = async () => {
     setLightState(!lightState);
+    console.log(await internalIp.v4());
     if ((await internalIp.v4()) !== "192.168.10.95") {
       console.log("Remote");
       //Remote
